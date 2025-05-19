@@ -27,7 +27,9 @@ This project provides a real-time shipment tracking parser for USPS and FedEx us
 1. **Clone the repository**
 
 ```bash
-git clone [<your-repository-url>](https://github.com/ShihabXSarar/Real_Time_Shipment_Tracking_Project)
+git clone https://github.com/ShihabXSarar/Real_Time_Shipment_Tracking_Project
+cd Real_Time_Shipment_Tracking_Project
+
 ````
 
 2. **Create and activate a virtual environment (recommended)**
@@ -141,7 +143,4 @@ Then enter a JSON object, e.g.:
 
 ## Contact
 
-For any questions or issues, please contact \[Shihab Sarar] at \[[shihab312417@gmail.com](mailto:shihab312417@gmail.com)].
-
-```
-```
+For any questions or issues, don't hesitate to get in touch with \Shihab Sarar at \[[shihab312417@gmail.com](mailto:shihab312417@gmail.com)].
