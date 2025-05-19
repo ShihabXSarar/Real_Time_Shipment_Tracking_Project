@@ -1,4 +1,8 @@
+Certainly! Here’s the **full professional README.md markdown** file you can copy and paste directly:
+
+````markdown
 # Real-Time Shipment Tracking Parser
+
 This project provides a real-time shipment tracking parser for USPS and FedEx using browser automation and HTML parsing. It fetches live tracking data from official carrier websites and returns a standardized JSON output with detailed shipment status and event history.
 
 ---
@@ -25,17 +29,134 @@ This project provides a real-time shipment tracking parser for USPS and FedEx us
 
 1. **Clone the repository**
 
-```
-git clone <https://github.com/ShihabXSarar/Real_Time_Shipment_Tracking_Project>
-Create and activate a virtual environment (recommended)
+```bash
+git clone <your-repository-url>
+cd <your-repository-folder>
+````
 
-bash
-Copy
+2. **Create and activate a virtual environment (recommended)**
+
+```bash
 python -m venv venv
 source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+```
 
-Install Python dependencies
+3. **Install Python dependencies**
+
+```bash
 pip install -r requirements.txt
+```
 
-Install Playwright browsers
+4. **Install Playwright browsers**
+
+```bash
 playwright install
+```
+
+---
+
+## Usage
+
+The script accepts JSON input specifying the carrier and tracking number, and returns tracking details.
+
+### Command-line usage
+
+Run the script with a JSON string argument:
+
+```bash
+python Test.py '{"carrier": "FedEx", "tracking": "880646011093"}'
+```
+
+or
+
+```bash
+python Test.py '{"carrier": "USPS", "tracking": "9405503699300745053865"}'
+```
+
+### Interactive usage
+
+Run the script without arguments to input JSON interactively:
+
+```bash
+python Test.py
+```
+
+Then enter a JSON object, e.g.:
+
+```json
+{"carrier": "FedEx", "tracking": "880646011093"}
+```
+
+---
+
+## Input Format
+
+```json
+{
+  "carrier": "USPS" | "FedEx",
+  "tracking": "<tracking_number_string>"
+}
+```
+
+---
+
+## Output Format
+
+```json
+{
+  "tracking": "<tracking_number>",
+  "carrier": "USPS" | "FedEx",
+  "shipment_status": "<Shipment status>",
+  "delivered_at": "<Delivery timestamp or null>",
+  "delivery_location": "<Delivery location or null>",
+  "route_summary": [
+    {
+      "event": "<Event name>",
+      "location": "<Event location>",
+      "datetime": "<Event timestamp>",
+      "note": "<Optional note>"
+    }
+    // More events ...
+  ]
+}
+```
+
+---
+
+## Project Structure
+
+* `tracking_parser/scrapers/`
+  Contains carrier-specific scraper implementations (`usps_scraper.py`, `fedex_scraper.py`).
+
+* `Test.py`
+  Entry point script to run the tracking parser with JSON input.
+
+* `requirements.txt`
+  Python package dependencies.
+
+---
+
+## Notes
+
+* Ensure you have a stable internet connection; the scraper loads live carrier web pages.
+* Use Python 3.8+ for compatibility.
+* Playwright installs browser binaries on first run; ensure `playwright install` is executed.
+
+---
+
+## License
+
+[MIT License](LICENSE)
+
+---
+
+## Contact
+
+For any questions or issues, please contact \[Your Name] at \[[your.email@example.com](mailto:your.email@example.com)].
+
+```
+
+---
+
+Just copy and paste this entire content into your `README.md` file!
+```
