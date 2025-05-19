@@ -1,6 +1,3 @@
-Certainly! Here’s the **full professional README.md markdown** file you can copy and paste directly:
-
-````markdown
 # Real-Time Shipment Tracking Parser
 
 This project provides a real-time shipment tracking parser for USPS and FedEx using browser automation and HTML parsing. It fetches live tracking data from official carrier websites and returns a standardized JSON output with detailed shipment status and event history.
@@ -142,17 +139,10 @@ Then enter a JSON object, e.g.:
 * Use Python 3.8+ for compatibility.
 * Playwright installs browser binaries on first run; ensure `playwright install` is executed.
 
----
-
-## License
-
-[MIT License](LICENSE)
-
----
 
 ## Contact
 
-For any questions or issues, please contact \[Your Name] at \[[your.email@example.com](mailto:your.email@example.com)].
+For any questions or issues, please contact \[Shihab Sarar] at \[[your.email@example.com](mailto:shihab312417@gmail.com)].
 
 ```
 
