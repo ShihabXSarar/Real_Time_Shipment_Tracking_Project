@@ -143,4 +143,4 @@ Then enter a JSON object, e.g.:
 
 ## Contact
 
-For any questions or issues, don't hesitate to get in touch with \Shihab Sarar at \[[shihab312417@gmail.com](mailto:shihab312417@gmail.com)].
+For any questions or issues, don't hesitate to get in touch with Shihab Sarar at \[shihab312417@gmail.com(mailto:shihab312417@gmail.com)].
