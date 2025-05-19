@@ -108,6 +108,7 @@ class FedExScraper(BaseScraper):
                             for inp in input_candidates:
                                 try:
                                     if inp.is_visible() and inp.is_enabled():
+                                        # Only use if input is not in the top nav bar (use bounding box)
                                         box = inp.bounding_box()
                                         if box and box['y'] > 150:
                                             input_box = inp
@@ -167,43 +168,7 @@ class FedExScraper(BaseScraper):
                             timeout=90000
                         )
                         page.wait_for_timeout(2500)
-
-                        # ---- [NEW LOGIC] ----
                         html_content = page.content()
-                        def is_delivered_in_summary(html):
-                            soup = BeautifulSoup(html, "html.parser")
-                            for s in soup.find_all(["span", "div", "h2"]):
-                                t = s.get_text(strip=True).lower()
-                                if "delivered" in t:
-                                    return True
-                            return False
-
-                        if is_delivered_in_summary(html_content):
-                            logger.info("Status is Delivered: Will try to click 'View more details'...")
-                            view_more_btn = None
-                            for _ in range(12):  # up to 12*700ms = ~8 seconds
-                                btns = page.query_selector_all("button, a")
-                                for btn in btns:
-                                    try:
-                                        text = btn.inner_text().strip().lower()
-                                        if ("view more details" in text or "show more" in text or "view full history" in text) and btn.is_visible() and btn.is_enabled():
-                                            view_more_btn = btn
-                                            break
-                                    except Exception:
-                                        continue
-                                if view_more_btn:
-                                    view_more_btn.scroll_into_view_if_needed()
-                                    self._human_like_delay()
-                                    view_more_btn.click()
-                                    logger.info("Clicked 'View more details'.")
-                                    page.wait_for_timeout(2200)
-                                    break
-                                page.wait_for_timeout(700)
-                            # Now grab the full-page HTML with all events visible
-                            html_content = page.content()
-                        else:
-                            logger.info("Status is not Delivered: parsing visible summary/events (no 'View more details').")
-
                         return self._parse_tracking_info(html_content)
 
                     except Exception as e:
@@ -230,40 +195,39 @@ class FedExScraper(BaseScraper):
             return " ".join(x.split()).replace("\xa0", " ").strip()
 
         soup = BeautifulSoup(html_content, "html.parser")
-
         events = []
 
-        # 1. Find the travel history table (FedEx style)
-        history_table = soup.select_one("table.fdx-c-table, table[role='presentation']")
-        if not history_table:
-            history_table = next((t for t in soup.find_all("table") if "history" in t.text.lower()), None)
-
-        # 2. Extract rows (skip header if present)
-        if history_table:
-            for tr in history_table.find_all("tr"):
+        # Try to parse the travel history table (the real FedEx timeline)
+        table = soup.select_one("table.fdx-c-table, table[role='presentation']")
+        if table:
+            rows = table.find_all("tr")
+            for tr in rows:
                 tds = tr.find_all("td")
-                # FedEx table can have 3 or 4 columns (Date, Time, Event, Location)
                 if len(tds) >= 3:
-                    # Parse
+                    # Format: [Date, Time, Event, Location]
                     date_col = clean(tds[0].get_text())
                     time_col = clean(tds[1].get_text())
                     event_col = clean(tds[2].get_text())
                     location_col = clean(tds[3].get_text()) if len(tds) > 3 else ""
-                    # Build datetime
-                    if date_col and time_col:
-                        # Try to convert date
-                        try:
-                            dt = datetime.strptime(date_col, "%A, %m/%d/%y")
-                            date_fmt = dt.strftime("%B %d, %Y")
-                        except Exception:
-                            # fallback: just join them
-                            date_fmt = date_col
+                    # Build a clean datetime
+                    datetime_val = ""
+                    try:
+                        # Handles "Friday, 4/25/25" or just "4/25/25"
+                        if "," in date_col:
+                            _, date_val = date_col.split(",", 1)
+                            date_val = date_val.strip()
+                        else:
+                            date_val = date_col
+                        dt = datetime.strptime(date_val, "%m/%d/%y")
+                        date_fmt = dt.strftime("%B %d, %Y")
+                    except Exception:
+                        date_fmt = date_col
+                    if date_fmt and time_col:
                         datetime_val = f"{date_fmt}, {time_col}"
-                    elif date_col:
-                        datetime_val = date_col
+                    elif date_fmt:
+                        datetime_val = date_fmt
                     else:
                         datetime_val = time_col
-                    # Save event
                     events.append(TrackingEvent(
                         event=event_col,
                         location=location_col,
@@ -271,35 +235,83 @@ class FedExScraper(BaseScraper):
                         note=None
                     ))
 
-        # 3. Determine status, delivered_at, delivery_location
-        status = ""
+        # Fallback: simple timeline if table not found
+        if not events:
+            for step in soup.select(".shipment-status-progress-container .shipment-status-progress-step"):
+                event_label = step.select_one(".shipment-status-progress-step-label")
+                event_label_text = clean(event_label.get_text()) if event_label else ""
+                event_content = step.select_one(".shipment-status-progress-step-content")
+                location = ""
+                datetime_val = ""
+                if event_content:
+                    event_parts = [clean(x) for x in event_content.stripped_strings]
+                    if len(event_parts) == 2:
+                        location, datetime_val = event_parts
+                    elif len(event_parts) == 1:
+                        if "/" in event_parts[0] or ":" in event_parts[0]:
+                            datetime_val = event_parts[0]
+                        else:
+                            location = event_parts[0]
+                events.append(TrackingEvent(
+                    event=event_label_text,
+                    location=location,
+                    datetime=datetime_val,
+                    note=None
+                ))
+
+        # Shipment status detection (never use "From" or "To")
+        KNOWN_STATUSES = [
+            "Delivered",
+            "Exception",
+            "Out for delivery",
+            "In transit",
+            "On the way",
+            "Picked up",
+            "Pending",
+            "Shipment information sent to FedEx",
+            "Shipment exception",
+            "Returning to sender",
+            "Arrived at FedEx location",
+            "Left FedEx origin facility",
+            "Available for pickup"
+        ]
+
+        status = "Unknown"
         delivered_at = ""
         delivery_location = ""
-        found_delivered = False
 
-        for event in events:
-            if event.event and "delivered" in event.event.lower() and not found_delivered:
-                status = "Delivered"
-                delivered_at = event.datetime
-                delivery_location = event.location
-                found_delivered = True
+        # Set by first matching known status, in priority order
+        for known_status in KNOWN_STATUSES:
+            for ev in events:
+                if ev.event and known_status.lower() in ev.event.lower():
+                    status = known_status
+                    if "delivered" in known_status.lower():
+                        delivered_at = ev.datetime
+                        delivery_location = ev.location
+                    break
+            if status == known_status:
+                break
 
-        # If no explicit delivered, take the most recent event as status
-        if not status:
-            if events:
-                status = events[-1].event
-                delivered_at = events[-1].datetime
-                delivery_location = events[-1].location
+        # Fallbacks if no status matched
+        if status == "Unknown" and events:
+            # Use last event's info if nothing matches
+            status = events[-1].event
+            delivered_at = events[-1].datetime
+            delivery_location = events[-1].location
 
-        # Final fallback for shipment_status
-        if not status:
-            status = "Unknown"
+        # Final fallback: if "delivered_at" still empty, use last event's datetime/location
+        if not delivered_at and events:
+            delivered_at = events[-1].datetime
+        if not delivery_location and events:
+            delivery_location = events[-1].location
 
         return TrackingResponse(
             tracking=self.tracking_number,
             carrier="FedEx",
-            shipment_status=status if status else "Unknown",
+            shipment_status=status or "Unknown",
             delivered_at=delivered_at,
             delivery_location=delivery_location,
             route_summary=events
         )
+
+

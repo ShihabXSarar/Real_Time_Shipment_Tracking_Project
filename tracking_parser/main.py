@@ -16,16 +16,6 @@ logger = logging.getLogger(__name__)
 
 
 def get_tracking_info(carrier: str, tracking: Union[str, List[str]]) -> Union[Dict[str, Any], List[Dict[str, Any]]]:
-    """
-    Get tracking information for one or more tracking numbers
-
-    Args:
-        carrier: The carrier name (USPS or FedEx)
-        tracking: A single tracking number or a list of tracking numbers
-
-    Returns:
-        Tracking information as a dictionary or list of dictionaries
-    """
     # Handle multiple tracking numbers
     if isinstance(tracking, list):
         results = []
@@ -69,15 +59,6 @@ def get_tracking_info(carrier: str, tracking: Union[str, List[str]]) -> Union[Di
 
 
 def parse_input(input_data: Union[str, Dict[str, Any]]) -> Dict[str, Union[str, List[str]]]:
-    """
-    Parse input data from commandline or API
-
-    Args:
-        input_data: Input as JSON string or dictionary
-
-    Returns:
-        Dictionary with carrier and tracking information
-    """
     if isinstance(input_data, str):
         try:
             data = json.loads(input_data)
