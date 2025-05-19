@@ -39,7 +39,7 @@ class USPSScraper(BaseScraper):
             try:
                 with sync_playwright() as p:
                     browser = p.chromium.launch(
-                        headless=False,  # debug: set True in production
+                        headless=True,  # debug: set True in production
                         args=[
                             "--disable-blink-features=AutomationControlled",
                             "--disable-infobars",
