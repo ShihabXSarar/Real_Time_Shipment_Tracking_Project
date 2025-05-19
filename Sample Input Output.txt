@@ -1,0 +1,242 @@
+USPS
+
+Input: {"carrier": "USPS", "tracking": "9505566802613814931848"}
+
+Output:
+{
+  "tracking": "9505566802613814931848",
+  "carrier": "USPS",
+  "shipment_status": "Delivered",
+  "delivered_at": "April 22, 2025, 11:59 am",
+  "delivery_location": "MCHENRY, IL 60051",
+  "route_summary": [
+    {
+      "event": "Delivered, Front Door/Porch",
+      "location": "MCHENRY, IL 60051",
+      "datetime": "April 22, 2025, 11:59 am",
+      "note": null
+    },
+    {
+      "event": "Out for Delivery",
+      "location": "MCHENRY, IL 60051",
+      "datetime": "April 22, 2025, 7:20 am",
+      "note": null
+    },
+    {
+      "event": "Arrived at Post Office",
+      "location": "MCHENRY, IL 60050",
+      "datetime": "April 22, 2025, 7:09 am",
+      "note": null
+    },
+    {
+      "event": "In Transit to Next Facility",
+      "location": "",
+      "datetime": "April 21, 2025",
+      "note": null
+    },
+    {
+      "event": "Arrived at USPS Regional Origin Facility",
+      "location": "QUEENS NY DISTRIBUTION CENTER",
+      "datetime": "April 18, 2025, 6:12 pm",
+      "note": null
+    },
+    {
+      "event": "Accepted at USPS Regional Facility",
+      "location": "QUEENS NY DISTRIBUTION CENTER",
+      "datetime": "April 18, 2025, 5:12 pm",
+      "note": null
+    }
+  ]
+}
+
+Process finished with exit code 0
+
+Input:
+{"carrier": "USPS", "tracking": "9505551926070313963674"}
+
+Output:
+{
+  "tracking": "9505551926070313963674",
+  "carrier": "USPS",
+  "shipment_status": "Delivered",
+  "delivered_at": "May 1, 2025, 1:04 pm",
+  "delivery_location": "THE VILLAGES, FL 32162",
+  "route_summary": [
+    {
+      "event": "Delivered, Parcel Locker",
+      "location": "THE VILLAGES, FL 32162",
+      "datetime": "May 1, 2025, 1:04 pm",
+      "note": null
+    },
+    {
+      "event": "Out for Delivery",
+      "location": "THE VILLAGES, FL 32162",
+      "datetime": "May 1, 2025, 8:06 am",
+      "note": null
+    },
+    {
+      "event": "Arrived at Post Office",
+      "location": "LADY LAKE, FL 32159",
+      "datetime": "May 1, 2025, 7:55 am",
+      "note": null
+    },
+    {
+      "event": "Arrived at USPS Facility",
+      "location": "LADY LAKE, FL 32159",
+      "datetime": "May 1, 2025, 7:20 am",
+      "note": null
+    },
+    {
+      "event": "In Transit to Next Facility",
+      "location": "",
+      "datetime": "May 1, 2025, 6:11 am",
+      "note": null
+    },
+    {
+      "event": "Departed USPS Regional Facility",
+      "location": "LAKE MARY FL DISTRIBUTION CENTER",
+      "datetime": "May 1, 2025, 5:27 am",
+      "note": null
+    },
+    {
+      "event": "Arrived at USPS Regional Destination Facility",
+      "location": "LAKE MARY FL DISTRIBUTION CENTER",
+      "datetime": "May 1, 2025, 1:52 am",
+      "note": null
+    },
+    {
+      "event": "In Transit to Next Facility",
+      "location": "",
+      "datetime": "April 30, 2025",
+      "note": null
+    },
+    {
+      "event": "Arrived at USPS Facility",
+      "location": "CAROLINA, PR 00984",
+      "datetime": "April 27, 2025, 9:25 pm",
+      "note": null
+    },
+    {
+      "event": "Departed USPS Regional Facility",
+      "location": "METRO NY DISTRIBUTION CENTER",
+      "datetime": "April 18, 2025, 7:41 am",
+      "note": null
+    },
+    {
+      "event": "Arrived at USPS Regional Facility",
+      "location": "METRO NY DISTRIBUTION CENTER",
+      "datetime": "April 18, 2025, 1:50 am",
+      "note": null
+    },
+    {
+      "event": "In Transit to Next Facility",
+      "location": "",
+      "datetime": "April 18, 2025, 1:30 am",
+      "note": null
+    },
+    {
+      "event": "Departed USPS Regional Facility",
+      "location": "QUEENS NY DISTRIBUTION CENTER",
+      "datetime": "April 18, 2025, 12:55 am",
+      "note": null
+    },
+    {
+      "event": "Arrived at USPS Regional Origin Facility",
+      "location": "QUEENS NY DISTRIBUTION CENTER",
+      "datetime": "April 17, 2025, 6:42 pm",
+      "note": null
+    },
+    {
+      "event": "Accepted at USPS Regional Facility",
+      "location": "QUEENS NY DISTRIBUTION CENTER",
+      "datetime": "April 17, 2025, 5:42 pm",
+      "note": null
+    }
+  ] }
+FedEx
+
+Input: {"carrier": "FedEx", "tracking": "880646011093"}
+
+Output:
+{
+  "tracking": "880646011093",
+  "carrier": "FedEx",
+  "shipment_status": "Exception",
+  "delivered_at": "",
+  "delivery_location": "Olive Branch, MS US",
+  "route_summary": [
+    {
+      "event": "From",
+      "location": "",
+      "datetime": "",
+      "note": null
+    },
+    {
+      "event": "We have your package",
+      "location": "LAWRENCE, NY",
+      "datetime": "4/18/25 3:49 PM",
+      "note": null
+    },
+    {
+      "event": "Shipment exception",
+      "location": "LAWRENCE, NY",
+      "datetime": "4/21/25 2:12 PM",
+      "note": null
+    },
+    {
+      "event": "OUT FOR DELIVERY",
+      "location": "",
+      "datetime": "",
+      "note": null
+    },
+    {
+      "event": "To",
+      "location": "Olive Branch, MS US",
+      "datetime": "",
+      "note": null
+    }
+  ]
+}
+Input:
+{"carrier": "FedEx", "tracking": "880808205904"}
+
+Output:
+{
+  "tracking": "880808205904",
+  "carrier": "FedEx",
+  "shipment_status": "Delivered",
+  "delivered_at": "",
+  "delivery_location": "",
+  "route_summary": [
+    {
+      "event": "From",
+      "location": "",
+      "datetime": "",
+      "note": null
+    },
+    {
+      "event": "We have your package",
+      "location": "LAWRENCE, NY",
+      "datetime": "4/25/25 3:14 PM",
+      "note": null
+    },
+    {
+      "event": "ON THE WAY",
+      "location": "BOYLSTON, MA",
+      "datetime": "4/28/25 4:07 AM",
+      "note": null
+    },
+    {
+      "event": "OUT FOR DELIVERY",
+      "location": "BOYLSTON, MA",
+      "datetime": "4/28/25 4:21 AM",
+      "note": null
+    },
+    {
+      "event": "Delivered",
+      "location": "",
+      "datetime": "",
+      "note": null
+    }
+  ]
+}
